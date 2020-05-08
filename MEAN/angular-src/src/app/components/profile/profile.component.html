@@ -1,0 +1,12 @@
+<mat-card class="profile">
+  <div *ngIf="user">
+    <mat-card-title>{{ user.name }}</mat-card-title>
+    <br /><br /><br />
+
+    <mat-card-content>
+      <mat-card>Username : {{ user.username }}</mat-card>
+      <br />
+      <mat-card>Email : {{ user.email }}</mat-card>
+    </mat-card-content>
+  </div>
+</mat-card>

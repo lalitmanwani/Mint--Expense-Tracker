@@ -1,0 +1,305 @@
+<mat-grid-list cols="3" rowHeight="300px">
+  <mat-grid-tile>
+    <mat-card
+      ><mat-card-title>Expenses</mat-card-title>
+      <mat-card-content>
+        <h1 style="font-size: 60px;">
+          <img
+            mat-card-sm-image
+            src="https://upload.wikimedia.org/wikipedia/commons/6/62/RedDownArrow.svg"
+          />
+          $ {{ total_exp }}
+        </h1>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <mat-card
+      ><mat-card-title>Income</mat-card-title>
+      <mat-card-content>
+        <h1 style="font-size: 60px;">
+          <img
+            mat-card-sm-image
+            src="https://upload.wikimedia.org/wikipedia/commons/f/fe/Green-Up-Arrow.svg"
+          />
+          $ {{ total_inc }}
+        </h1>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <mat-card>
+      <mat-card-title>Savings</mat-card-title>
+      <mat-card-content style="height: 90px; width: 180px;">
+        <br />
+        <h1 style="font-size: 60px;">$ {{ total_inc - total_exp }}</h1>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+</mat-grid-list>
+
+<mat-divider></mat-divider>
+
+<div>
+  <div style="height: 10px;"></div>
+
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="showMyContainer = !showMyContainer"
+  >
+    Add Expense
+  </button>
+
+  &nbsp; &nbsp; &nbsp;
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="showMyIncomeContainer = !showMyIncomeContainer"
+  >
+    Add Income
+  </button>
+
+  &nbsp;&nbsp;&nbsp;
+  <button mat-mini-fab (click)="updateIncomeTotal()">
+    <mat-icon>refresh</mat-icon>
+  </button>
+
+  <div *ngIf="showMyContainer">
+    <div style="height: 30px;"></div>
+    <mat-form-field>
+      <mat-label>Choose a date</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="date" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <br />
+    <mat-form-field class="example-form-field">
+      <mat-label>Description</mat-label>
+      <input matInput type="text" [(ngModel)]="description" />
+    </mat-form-field>
+    <br />
+    <mat-form-field class="example-form-field">
+      <mat-label>Amount</mat-label>
+      <input
+        matInput
+        type="number"
+        min="1"
+        step="1"
+        oninput="validity.valid||(value='');"
+        [(ngModel)]="amount"
+      />
+    </mat-form-field>
+
+    <br />
+    <button
+      mat-raised-button
+      color="primary"
+      class="btn btn-primary"
+      [disabled]="amount == null || description == null"
+      (click)="addExpense()"
+    >
+      Add
+    </button>
+    &nbsp;&nbsp;&nbsp;
+    <button
+      mat-raised-button
+      color="warn"
+      (click)="showMyContainer = !showMyContainer"
+    >
+      Cancel
+    </button>
+  </div>
+
+  <div *ngIf="showMyIncomeContainer">
+    <div style="height: 30px;"></div>
+    <mat-form-field>
+      <mat-label>Choose a date</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="date" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <br />
+    <mat-form-field class="example-form-field">
+      <mat-label>Description</mat-label>
+      <input matInput type="text" [(ngModel)]="description" />
+    </mat-form-field>
+    <br />
+    <mat-form-field class="example-form-field">
+      <mat-label>Amount</mat-label>
+      <input
+        matInput
+        type="number"
+        min="1"
+        step="1"
+        oninput="validity.valid||(value='');"
+        [(ngModel)]="amount"
+      />
+    </mat-form-field>
+
+    <br />
+    <button
+      mat-raised-button
+      color="primary"
+      class="btn btn-primary"
+      [disabled]="amount == null || description == null"
+      (click)="addIncome()"
+    >
+      Add
+    </button>
+    &nbsp;&nbsp;&nbsp;
+    <button
+      mat-raised-button
+      color="warn"
+      (click)="showMyIncomeContainer = !showMyIncomeContainer"
+    >
+      Cancel
+    </button>
+  </div>
+
+  <div style="height: 10px;"></div>
+</div>
+
+<mat-divider></mat-divider>
+
+<div style="height: 50px;"></div>
+<mat-tab-group>
+  <mat-tab label="Expense">
+    <div>
+      <h1>Expense Chart</h1>
+      <div style="display: block; margin: 0 auto; width: 300px;">
+        <canvas
+          baseChart
+          [data]="doughnutChartData"
+          [labels]="doughnutChartLabels"
+          [chartType]="doughnutChartType"
+        ></canvas>
+      </div>
+    </div>
+    <div style="height: 30px;"></div>
+    <mat-divider></mat-divider>
+    <div style="height: 30px;"></div>
+
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let expense of expenses">
+        <tr class="table-row">
+          <td>{{ expense.createdAt | date: "shortDate" }}</td>
+          <td>
+            <input
+              matInput
+              type="text"
+              [(ngModel)]="expense.description"
+              matTooltip="Click to edit"
+            />
+          </td>
+          <td>
+            <input
+              matInput
+              type="number"
+              maxlength="8"
+              class="amount"
+              [(ngModel)]="expense.amount"
+            />
+          </td>
+
+          <td>
+            <button mat-icon-button>
+              <mat-icon
+                (click)="updateExpense(expense)"
+                color="warn"
+                matTooltip="Update expense"
+                >update</mat-icon
+              >
+            </button>
+            <button mat-icon-button>
+              <mat-icon
+                (click)="deleteExpense(expense)"
+                color="warn"
+                matTooltip="Delete expense"
+                >delete</mat-icon
+              >
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-tab>
+  <mat-tab label="Income">
+    <div style="height: 30px;"></div>
+    <div>
+      <h1>Income Chart</h1>
+      <div style="display: block; margin: 0 auto; width: 300px;">
+        <canvas
+          baseChart
+          [data]="doughnutChartDataIncome"
+          [labels]="doughnutChartLabelsIncome"
+          [chartType]="doughnutChartTypeIncome"
+        ></canvas>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div style="height: 30px;"></div>
+
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let income of incomelist">
+        <tr class="table-row">
+          <td>{{ income.createdAt | date: "shortDate" }}</td>
+          <td>
+            <input
+              matInput
+              type="text"
+              [(ngModel)]="income.description"
+              matTooltip="Click to edit"
+            />
+          </td>
+          <td>
+            <input
+              matInput
+              type="number"
+              maxlength="8"
+              class="amount"
+              [(ngModel)]="income.amount"
+            />
+          </td>
+
+          <td>
+            <button mat-icon-button>
+              <mat-icon
+                (click)="updateIncome(income)"
+                color="warn"
+                matTooltip="Update expense"
+                >update</mat-icon
+              >
+            </button>
+            <button mat-icon-button>
+              <mat-icon
+                (click)="deleteIncome(income)"
+                color="warn"
+                matTooltip="Delete income"
+                >delete</mat-icon
+              >
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-tab>
+</mat-tab-group>

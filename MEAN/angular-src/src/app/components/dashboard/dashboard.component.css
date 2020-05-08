@@ -1,0 +1,12 @@
+@import "@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+.spacer {
+  flex: 1 1 auto;
+}
+table {
+  width: 90%;
+  margin: 0 auto;
+}
+canvas {
+  margin: 0 auto;
+}

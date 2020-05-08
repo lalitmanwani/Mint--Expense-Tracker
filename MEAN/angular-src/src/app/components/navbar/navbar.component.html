@@ -1,0 +1,55 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <mat-icon>eco</mat-icon>
+    <h1>Mint</h1>
+
+    <span class="spacer"></span>
+    <div>
+      <a
+        mat-button
+        [routerLinkActive]="['active']"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [routerLink]="['/']"
+      >
+        Home
+      </a>
+      <a
+        *ngIf="checkLoggedIn()"
+        [routerLinkActive]="['active']"
+        [routerLinkActiveOptions]="{ exact: true }"
+        mat-button
+        [routerLink]="'/dashboard'"
+      >
+        DashBoard
+      </a>
+      <a
+        *ngIf="checkLoggedIn()"
+        [routerLinkActive]="['active']"
+        [routerLinkActiveOptions]="{ exact: true }"
+        mat-button
+        [routerLink]="'/profile'"
+      >
+        Profile
+      </a>
+      <a
+        *ngIf="!checkLoggedIn()"
+        [routerLinkActive]="['active']"
+        [routerLinkActiveOptions]="{ exact: true }"
+        mat-button
+        [routerLink]="'/login'"
+      >
+        Login
+      </a>
+      <a
+        *ngIf="!checkLoggedIn()"
+        [routerLinkActive]="['active']"
+        [routerLinkActiveOptions]="{ exact: true }"
+        mat-button
+        [routerLink]="'/register'"
+      >
+        Register
+      </a>
+      <a mat-button (click)="onLogoutClick()" [routerLink]="'/'"> Logout </a>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>

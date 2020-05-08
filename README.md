@@ -38,7 +38,7 @@ Run nodemon
 The server starts running on port 3000
 For Client
 
-Navigate to client directory (cd client)
+Navigate to client directory (cd angular-src)
 Run npm install
 Run ng serve
 Client starts running on port 4200
